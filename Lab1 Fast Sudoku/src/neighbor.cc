@@ -6,8 +6,8 @@
 
 #include <algorithm>
 
-int neighbors[N][NEIGHBOR];
-
+int neighbors[N][NEIGHBOR];//neighbors[i][j]表示第i个方格的第j个邻居的下标
+// 在二维上标记方格的邻居 adjacent[i][j]为true表示方格[i][j]是方格[row][col]的邻居
 static void mark_adjacent(bool adjacent[ROW][COL], int row, int col)
 {
   for (int i = 0; i < NUM; ++i) {
@@ -26,7 +26,7 @@ static void mark_adjacent(bool adjacent[ROW][COL], int row, int col)
   adjacent[top+2][left+1] = true;
   adjacent[top+2][left+2] = true;
 }
-
+// 在一维上统计方格的邻居的下标
 static void collect_neighbors(const bool adjacent[ROW][COL], int row, int col, int myneighbors[NEIGHBOR])
 {
   int n = 0;
@@ -40,7 +40,7 @@ static void collect_neighbors(const bool adjacent[ROW][COL], int row, int col, i
   }
   assert(n == NEIGHBOR);
 }
-
+//输出调试信息
 static void print_neighbors(const bool adjacent[ROW][COL], int row, int col, int myneighbors[NEIGHBOR])
 {
   for (int y = 0; y < ROW; ++y) {
@@ -57,7 +57,7 @@ static void print_neighbors(const bool adjacent[ROW][COL], int row, int col, int
   }
   puts("\n");
 }
-
+//初始化
 /*public*/ void init_neighbors()
 {
   for (int row = 0; row < ROW; ++row) {
