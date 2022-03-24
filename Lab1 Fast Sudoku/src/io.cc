@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <sys/types.h>
+#include <assert.h>
 #include <functional>
 #include "sudoku.h"
 
@@ -20,7 +21,10 @@ void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
     {
         if((!output.empty()) && output.top().id == id)//如果不为空，判断顶层是否为下一个输出
         {
-            cout << output.top().str << "\n";
+            Sudoku tmp = output.top();
+            for(int i = 0;i < N; i++)
+                cout << char('0'+tmp.str[i]);
+            cout << '\n';
             //临界区
             pthread_mutex_lock(&outMutex);
             output.pop();
@@ -31,7 +35,7 @@ void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
     
 }
 
-void* loadSodoku(void *arg)
+void* loadSodoku(void* inputDone)
 {
     string file;
     pthread_t outputThread;
@@ -45,10 +49,15 @@ void* loadSodoku(void *arg)
         
         while (true)
         {
+            char s[90];
             Sudoku tmp;
             tmp.id = id++;
-            if (fgets(tmp.str, sizeof(tmp.str), fp) != NULL)//按行读取文件
+            if (fgets(s, sizeof s, fp) != NULL)//按行读取文件
                 break;
+            for (int cell = 0; cell < N; ++cell) {
+                tmp.str[cell] = s[cell] - '0';
+                assert(0 <= tmp.str[cell] && tmp.str[cell] <= NUM);
+            }
             //临界区
             sem_wait(&emptySlots); 
             pthread_mutex_lock(&mutex);
@@ -57,4 +66,5 @@ void* loadSodoku(void *arg)
             sem_post(&fullSlots);
         }
     }
+    (*((bool*)inputDone)) = true;
 }

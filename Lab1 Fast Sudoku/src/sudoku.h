@@ -14,7 +14,7 @@ const int NUM = 9;
 struct Sudoku
 {
     unsigned long long id;
-    char str[81];
+    int str[81];
 
     bool operator() (Sudoku &a,Sudoku &b) { return a.id > b.id; }; //小顶堆
 };
@@ -27,12 +27,14 @@ extern pthread_mutex_t outMutex;
 
 extern std::queue<Sudoku> buffer;
 extern std::priority_queue<Sudoku> output;
+extern unsigned long long total; 
+extern unsigned long long total_solved; 
 
-extern int neighbors[N][NEIGHBOR];
-extern int board[N];
-extern int spaces[N];
-extern int nspaces;
-extern int (*chess)[COL];
+// extern int neighbors[N][NEIGHBOR];
+// extern int board[N];
+// extern int spaces[N];
+// extern int nspaces;
+// extern int (*chess)[COL];
 
 void* loadSodoku(void *);
 void init_neighbors();

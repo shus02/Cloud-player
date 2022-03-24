@@ -14,6 +14,8 @@ using namespace std;
 sem_t fullSlots; 
 sem_t emptySlots; 
 pthread_mutex_t mutex;
+unsigned long long total = 0; 
+unsigned long long total_solved = 0; 
 
 int64_t now()
 {
@@ -31,17 +33,16 @@ int main(int argc, char *argv[])
     pthread_mutex_init(&mutex,NULL);
 
     char puzzle[128];
-    int total_solved = 0;
-    int total = 0;
     int64_t start = now();
 
     pthread_t producer,consumers[THREAD_NUM];
+    bool inputDone = false;
     //创建线程读取数据到buffer
-    pthread_create(&producer, NULL, loadSodoku, NULL);
+    pthread_create(&producer, NULL, loadSodoku, &inputDone);
 
     //创建算法线程，线程将会等待buffer输入
     for(int i = 0;i < THREAD_NUM;i++)
-        pthread_create(&consumers[i], NULL, solve_sudoku_dancing_links, NULL);
+        pthread_create(&consumers[i], NULL, solve_sudoku_dancing_links, &inputDone);
     // while (fgets(puzzle, sizeof puzzle, fp) != NULL)
     // {
     //     if (strlen(puzzle) >= N)
