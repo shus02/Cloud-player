@@ -142,7 +142,7 @@ Basic_Test(){
 		cat ${Current_Folder}/${answer_data} >> ${Current_Folder}/${Answer}
 	done < $3
 
-	sleep 30
+	sleep 10
 	screen -S $1 -X stuff "^C^M"
 	screen -S $1 -X quit
 
@@ -211,7 +211,7 @@ Advanced_Test(){
 		cat ${Current_Folder}/${answer_data} >> ${Current_Folder}/${Answer}
 	done < $3
 
-	sleep 30
+	sleep 15
 	screen -S $1 -X stuff "^C^M"
 	screen -S $1 -X quit
 

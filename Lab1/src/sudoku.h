@@ -37,6 +37,7 @@ extern unsigned long long total_solved;
 // extern int nspaces;
 // extern int (*chess)[COL];
 
+void* outputResult(void *);
 void* loadSodoku(void *);
 void init_neighbors();
 void sudoku_input(const char in[N]);

@@ -43,9 +43,10 @@ int main(int argc, char *argv[])
     #endif
 
     char puzzle[128];
-    int64_t start = now();
 
     pthread_t producer,consumers[THREAD_NUM];
+    pthread_t outputThread;
+
     bool inputDone = false;
     //创建线程读取数据到buffer
     pthread_create(&producer, NULL, loadSodoku, &inputDone);
@@ -53,13 +54,17 @@ int main(int argc, char *argv[])
     //创建算法线程，线程将会等待buffer输入
     for(int i = 0;i < THREAD_NUM;i++)
         pthread_create(&consumers[i], NULL, solve_sudoku_dancing_links, &inputDone);
+    
+    bool calcuDone = false;
+    //输出线程
+    pthread_create(&outputThread, NULL,outputResult, &calcuDone);  
 
-    pthread_join(producer,nullptr);
-    for(int i = 0;i < THREAD_NUM;i++)
+    pthread_join(producer,nullptr);         //等待读取完成
+
+    for(int i = 0;i < THREAD_NUM;i++)       //等待计算完成
         pthread_join(consumers[i],nullptr);
+    calcuDone = true;                       //完成标记，告知输出线程
 
-    int64_t end = now();
-    double sec = (end - start) / 1000000.0;
-    printf("%f sec %f ms each %lld\n", sec, 1000 * sec / total, total_solved);
+    pthread_join(outputThread,NULL);        //等待输出线程
     return 0;
 }

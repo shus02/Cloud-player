@@ -15,15 +15,15 @@ using namespace std;
 queue<Sudoku> buffer;
 priority_queue<Sudoku,vector<Sudoku>> output;
 
-void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
+void* outputResult(void * calDone) //STL queue 多线程读取是否安全？
 {
     long long id = 0;
-    while(id <= *((unsigned long long *)maxid))
+    while(!(*((bool*)calDone)))
     {
         sem_wait(&outfullSlots);
         while(output.top().id != id) //空转直到满足条件
         {
-            usleep(100);
+            usleep(1000);
             #if DEBUG_MODE
             cout << "output waiting..." << endl;
             cout << "当前id:" << output.top().id << '\t' << "期望id:" << id << endl;
@@ -35,7 +35,7 @@ void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
         #endif
         for(int i = 0;i < N; i++)
             cout << char('0'+tmp.str[i]);
-        cout << '\n';
+        cout << endl;
         //临界区
         pthread_mutex_lock(&outMutex);
         output.pop();
@@ -48,13 +48,11 @@ void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
 void* loadSodoku(void* inputDone)
 {
     string file;
-    pthread_t outputThread;
     unsigned long long id = 0;                              //一次最多处理longlong
 
-    pthread_create(&outputThread, NULL,outputResult, &id);  //输出线程
-
-    while (getline(cin, file))                              //每个文件名一行
+    while (!cin.eof())                                      //每个文件名一行
     {
+        getline(cin, file);
         FILE *fp = fopen(file.c_str(), "r");                //打开文件
         if(fp == nullptr)
         {
@@ -100,6 +98,5 @@ void* loadSodoku(void* inputDone)
         }
     }
     (*((bool*)inputDone)) = true;
-    pthread_join(outputThread,NULL);
     return nullptr;
 }
