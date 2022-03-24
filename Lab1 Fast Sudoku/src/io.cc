@@ -32,7 +32,7 @@ void* outputResult(void * maxid) //STL queue 多线程读取是否安全？
             id++;
         }
     }
-    
+    return nullptr;
 }
 
 void* loadSodoku(void* inputDone)
@@ -67,4 +67,5 @@ void* loadSodoku(void* inputDone)
         }
     }
     (*((bool*)inputDone)) = true;
+    return nullptr;
 }

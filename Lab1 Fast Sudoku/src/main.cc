@@ -14,6 +14,7 @@ using namespace std;
 sem_t fullSlots; 
 sem_t emptySlots; 
 pthread_mutex_t mutex;
+pthread_mutex_t outMutex;
 unsigned long long total = 0; 
 unsigned long long total_solved = 0; 
 
@@ -31,6 +32,8 @@ int main(int argc, char *argv[])
     sem_init(&fullSlots, 0, 0); 
     sem_init(&emptySlots, 0, BUF_SIZE); 
     pthread_mutex_init(&mutex,NULL);
+    pthread_mutex_init(&outMutex,NULL);
+
 
     char puzzle[128];
     int64_t start = now();
@@ -64,7 +67,7 @@ int main(int argc, char *argv[])
     // }
     int64_t end = now();
     double sec = (end - start) / 1000000.0;
-    printf("%f sec %f ms each %d\n", sec, 1000 * sec / total, total_solved);
+    printf("%f sec %f ms each %lld\n", sec, 1000 * sec / total, total_solved);
 
     return 0;
 }

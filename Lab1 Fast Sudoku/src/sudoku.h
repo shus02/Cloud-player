@@ -16,7 +16,7 @@ struct Sudoku
     unsigned long long id;
     int str[81];
 
-    bool operator() (Sudoku &a,Sudoku &b) { return a.id > b.id; }; //小顶堆
+    bool operator<(const Sudoku& a) const{return id > a.id;}//小顶堆
 };
 
 
