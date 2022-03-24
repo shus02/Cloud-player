@@ -1,3 +1,4 @@
 ./tests/test1
 ./tests/test1000
 ./tests/test10000
+./tests/test1e5

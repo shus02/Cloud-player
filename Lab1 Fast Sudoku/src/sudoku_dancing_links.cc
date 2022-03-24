@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include "sudoku.h"
 using namespace std;
 
@@ -337,11 +338,16 @@ void *solve_sudoku_dancing_links(void *inputDone)
         //临界区
         sem_wait(&fullSlots); // buffer不为空
         pthread_mutex_lock(&mutex);
+        #if DEBUG_MODE
+        cout << tmp.id << ": 进入buffer临界区(-)" << endl;
+        #endif
         tmp = buffer.front();
         buffer.pop(); //弹出队首
         pthread_mutex_unlock(&mutex);
         sem_post(&emptySlots);
-
+        #if DEBUG_MODE
+        cout << tmp.id << ": 离开buffer临界区(-)" << endl;
+        #endif
         //计算结果
         ++total;
         Dance d(tmp.str);
@@ -352,9 +358,10 @@ void *solve_sudoku_dancing_links(void *inputDone)
         pthread_mutex_lock(&outMutex);
         output.push(tmp);
         pthread_mutex_unlock(&outMutex);
-
+        sem_post(&outfullSlots);
         //输入完成，且buffer为空，则结束
         if ((*((bool *)inputDone)) && buffer.empty()) 
             break;
     }
+    return nullptr;
 }

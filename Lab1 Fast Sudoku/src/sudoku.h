@@ -8,7 +8,7 @@
 #define BUF_SIZE 100
 #define THREAD_NUM 12
 
-const bool DEBUG_MODE = false;
+#define DEBUG_MODE false
 enum { ROW=9, COL=9, N = 81, NEIGHBOR = 20 };
 const int NUM = 9;
 struct Sudoku
@@ -22,6 +22,7 @@ struct Sudoku
 
 extern sem_t fullSlots; 
 extern sem_t emptySlots; 
+extern sem_t outfullSlots;
 extern pthread_mutex_t mutex;
 extern pthread_mutex_t outMutex;
 

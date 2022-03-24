@@ -12,7 +12,8 @@
 using namespace std;
 
 sem_t fullSlots; 
-sem_t emptySlots; 
+sem_t emptySlots;
+sem_t outfullSlots;
 pthread_mutex_t mutex;
 pthread_mutex_t outMutex;
 unsigned long long total = 0; 
@@ -28,12 +29,18 @@ int64_t now()
 int main(int argc, char *argv[])
 {
     //init
-    init_neighbors();
+    //init_neighbors();
     sem_init(&fullSlots, 0, 0); 
     sem_init(&emptySlots, 0, BUF_SIZE); 
+    sem_init(&outfullSlots, 0, 0); 
     pthread_mutex_init(&mutex,NULL);
     pthread_mutex_init(&outMutex,NULL);
-
+    
+    #if DEBUG_MODE
+    char cwd[80];
+    getcwd(cwd,sizeof(cwd));
+    cout << "当前工作目录：" << cwd << endl;
+    #endif
 
     char puzzle[128];
     int64_t start = now();
@@ -46,28 +53,13 @@ int main(int argc, char *argv[])
     //创建算法线程，线程将会等待buffer输入
     for(int i = 0;i < THREAD_NUM;i++)
         pthread_create(&consumers[i], NULL, solve_sudoku_dancing_links, &inputDone);
-    // while (fgets(puzzle, sizeof puzzle, fp) != NULL)
-    // {
-    //     if (strlen(puzzle) >= N)
-    //     {
-    //         ++total;
-    //         input(puzzle);
-    //         // init_cache();
-    //         if (solve_sudoku_dancing_links(0))
-    //         {
-    //             ++total_solved;
-    //             if (!solved())
-    //                 assert(0);
-    //         }
-    //         else
-    //         {
-    //             printf("No: %s", puzzle);
-    //         }
-    //     }
-    // }
+
+    pthread_join(producer,nullptr);
+    for(int i = 0;i < THREAD_NUM;i++)
+        pthread_join(consumers[i],nullptr);
+
     int64_t end = now();
     double sec = (end - start) / 1000000.0;
     printf("%f sec %f ms each %lld\n", sec, 1000 * sec / total, total_solved);
-
     return 0;
 }
