@@ -6,7 +6,8 @@
 
 #include <algorithm>
 
-int neighbors[N][NEIGHBOR];
+int neighbors[N][NEIGHBOR];//neighbors[i][j]表示第i个方格的第j个邻居的下标
+// 在二维上标记方格的邻居 adjacent[i][j]为true表示方格[i][j]是方格[row][col]的邻居
 
 static void mark_adjacent(bool adjacent[ROW][COL], int row, int col)
 {
