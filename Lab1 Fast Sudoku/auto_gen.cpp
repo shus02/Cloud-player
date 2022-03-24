@@ -16,6 +16,7 @@ void clear()
 		}
 	}
  } 
+
 bool set(int x, int y, int val)
 {
     if (sudo[y][x] != 0)        //非空
