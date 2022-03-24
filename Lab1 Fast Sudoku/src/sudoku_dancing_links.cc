@@ -254,6 +254,11 @@ struct Dance
 
 void* solve_sudoku_dancing_links(void*)
 {
-  Dance d(board);
-  d.solve();
+    //从buffer中读取，
+    
+    //计算结果
+    Dance d(board);
+    d.solve();
+
+    //添加到输出队列
 }

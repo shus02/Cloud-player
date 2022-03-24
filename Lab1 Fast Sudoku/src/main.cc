@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <semaphore.h>
+#include <queue>
 #include "sudoku.h"
 using namespace std;
 

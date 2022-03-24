@@ -1,6 +1,10 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
 
+#include <semaphore.h>
+#include <list>
+#include <queue>
+
 #define BUF_SIZE 100
 #define THREAD_NUM 12
 
@@ -11,14 +15,19 @@ struct Sudoku
 {
     unsigned long long id;
     char str[81];
+
+    bool operator() (Sudoku &a,Sudoku &b) { return a.id > b.id; }; //小顶堆
 };
 
 
 extern sem_t fullSlots; 
 extern sem_t emptySlots; 
 extern pthread_mutex_t mutex;
+extern pthread_mutex_t outMutex;
 
-extern list<Sudoku> buffer;
+extern std::queue<Sudoku> buffer;
+extern std::priority_queue<Sudoku> output;
+
 extern int neighbors[N][NEIGHBOR];
 extern int board[N];
 extern int spaces[N];
