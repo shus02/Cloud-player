@@ -5,8 +5,8 @@
 #include <list>
 #include <queue>
 
-#define BUF_SIZE 100
-#define THREAD_NUM 12
+#define BUF_SIZE 1
+#define THREAD_NUM 30
 
 #define DEBUG_MODE false
 enum { ROW=9, COL=9, N = 81, NEIGHBOR = 20 };

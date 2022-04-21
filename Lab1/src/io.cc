@@ -21,7 +21,7 @@ void* outputResult(void * calDone) //STL queue 多线程读取是否安全？
     while(!(*((bool*)calDone)))
     {
         sem_wait(&outfullSlots);
-        while(output.top().id != id) //空转直到满足条件
+        while(output.top().id != id) //空转直到满足条件 (可以换成管程)
         {
             usleep(1000);
             #if DEBUG_MODE
